@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
+import LoadingIcon from './LoadingIcon'
 
 const Auth = ({setIsLoggedIn}) => {
   const navigate = useNavigate()
   const [isSignup, setIsSignup] = useState(true)
+  const [loadingIcon, setLoadingIcon] = useState(false)
   const [inputs,setInputs] = useState({
     name:"",
     email:"",
@@ -37,15 +39,18 @@ const Auth = ({setIsLoggedIn}) => {
   }
 
   const sendRequest = async (type="login")=>{
+    setLoadingIcon(true)
     const response = await axios.post(`https://blogapp2001.onrender.com/api/user/${type}`,{
       name: inputs.name,
       email: inputs.email,
       password: inputs.password
     }).catch(error=>console.log(error))
     const data = await response.data
+    setLoadingIcon(false)
     return data
   }
   return (
+    <div>
     <div className="auth-container">
         <p>{isSignup?"SIGNUP":"LOGIN"}</p>
         <form onSubmit={handleSubmit}>
@@ -57,6 +62,8 @@ const Auth = ({setIsLoggedIn}) => {
                 <h4 onClick={()=>setIsSignup(!isSignup)}>CHANGE TO {isSignup?"LOGIN":"SIGNUP"}</h4>
             </div>
         </form>
+    </div>
+    {loadingIcon && <LoadingIcon />}
     </div>
   )
 } 

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from "axios"
+import LoadingIcon from './LoadingIcon'
 
 const BlogCard = ({title,description,img,userName,id,setTabValue,isUser,setDeleteBlog}) => {
+  const [loadingIcon, setLoadingIcon] = useState(false)
   const navigate = useNavigate()
   const handleEdit = ()=>{
     navigate(`/myblogs/${id}`)
@@ -21,11 +23,14 @@ const BlogCard = ({title,description,img,userName,id,setTabValue,isUser,setDelet
     }
   }
   const sendDeleteRequest = async ()=>{
+    setLoadingIcon(true)
     const response = await axios.delete(`https://blogapp2001.onrender.com/api/blog/${id}`).catch(err=>console.log(err))
     const data = await response.data
+    setLoadingIcon(false)
     return data
   }
   return ( 
+    <div>
     <div className="card-container">
         {isUser && <div className='edit-and-delete'>
             <button onClick={handleEdit} className="card-button b1"><img src="./edit.png" height="30px" width="30px" alt="edit" /></button>
@@ -46,6 +51,8 @@ const BlogCard = ({title,description,img,userName,id,setTabValue,isUser,setDelet
             <br />
             <p><b style={{color:"black"}}>{userName}: </b>{description}</p>
         </div>
+      </div>
+    {loadingIcon && <LoadingIcon />}
     </div>
   )
 }

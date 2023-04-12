@@ -1,8 +1,11 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import LoadingIcon from './LoadingIcon'
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const AddBlog = ({setTabValue}) => {
+  const [loadingIcon, setLoadingIcon] = useState(false)
   const navigate = useNavigate()
   const [inputs,setInputs] = useState({
     title:"",
@@ -25,6 +28,7 @@ const AddBlog = ({setTabValue}) => {
     })
   }
   const sendRequest = async ()=>{
+    setLoadingIcon(true)
     const response = await axios.post("https://blogapp2001.onrender.com/api/blog/add",{
       title:inputs.title,
       description:inputs.description,
@@ -32,9 +36,11 @@ const AddBlog = ({setTabValue}) => {
       user: localStorage.getItem('userId')
     }).catch(err=>console.log(err))
     const data = await response.data;
+    setLoadingIcon(false)
     return data
   }
   return (
+    <div>
     <div className="addblog-container">
         <div>
             <h2 className="addblog-header">Add Your Blog</h2>
@@ -48,6 +54,8 @@ const AddBlog = ({setTabValue}) => {
             <input className="addblog-input" type="text" name='img' value={inputs.img} onChange={handleChange} required />
             <button className="addblog-submit" type="submit">Submit</button>
         </form>
+    </div>
+    {loadingIcon && <LoadingIcon />}
     </div>
   ) 
 }

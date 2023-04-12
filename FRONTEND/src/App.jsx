@@ -24,13 +24,13 @@ const App = () => {
       <Routes>
         { !isLoggedIn ? <Route path="/auth" element={<Auth setIsLoggedIn={setIsLoggedIn} />} /> :
             <>
-              <Route path="/myblogs" element={<UserBlogs setTabValue={setTabValue} />} />
-              <Route path="/myblogs/:id" element={<BlogDetail setTabValue={setTabValue} />} />
-              <Route path="/myblogs/add" element={<AddBlog setTabValue={setTabValue} />} />
+              <Route exact path="/myblogs" element={<UserBlogs setTabValue={setTabValue} />} />
+              <Route exact path="/myblogs/:id" element={<BlogDetail setTabValue={setTabValue} />} />
+              <Route exact path="/myblogs/add" element={<AddBlog setTabValue={setTabValue} />} />
             </>
         }
-        <Route exact path="/" element={<Navigate to="/allblogs"/>} />
-        <Route path="/allblogs" element={<AllBlogs setTabValue={setTabValue} />} />
+        <Route exact path="/allblogs" element={<AllBlogs setTabValue={setTabValue} />} />
+        <Route path="*" element={<Navigate to="/allblogs"/>} />
       </Routes>
     </main>
     </>
